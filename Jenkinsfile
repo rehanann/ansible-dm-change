@@ -9,12 +9,12 @@ pipeline {
             stage('Create Inventory') {
                 steps {
                     sh 'echo ${INVENTORY_FILE} | base64 -d'
-                    // sh 'base64 -d ${INVENTORY} > inventory.ini'
+                    sh 'base64 -d ${INVENTORY_FILE} > inventory.ini'
                 }
             }
             stage('Docker DM storage') {
                 steps {
-                    sh 'ansible-playbook -i inventory.ini docker-storage-setup-ofs.yml'
+                    sh 'ansible-playbook -i inventory.ini docker-storage-setup-dm.yml'
             }
         }
     }
