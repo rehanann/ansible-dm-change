@@ -57,7 +57,7 @@
         state: absent
     
     - block:
-        - name: create the docker-storage-setup overlayfs config file
+        - name: create the docker-storage-setup devicemapper config file
           template:
             src: "docker-storage-setup-dm"
             dest: /etc/sysconfig/docker-storage-setup
