@@ -2,7 +2,7 @@ pipeline {
   agent any
   environment {
     INVENTORY = credentials('INVENTORY_INI')
-    BRANCH = '{env.BRANCH_NAME'}
+    BRANCH = '{env.BRANCH_NAME}'
   }
   stages {
             stage('Checkout') {
