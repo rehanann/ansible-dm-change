@@ -8,7 +8,7 @@ pipeline {
              }
             stage('Create Inventory') {
                 steps {
-                    sh 'echo ${INVENTORY} | base64 -d'
+                    sh 'echo ${INVENTORY_FILE} | base64 -d'
                     // sh 'base64 -d ${INVENTORY} > inventory.ini'
                 }
             }
