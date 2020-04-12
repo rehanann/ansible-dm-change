@@ -1,16 +1,19 @@
 pipeline {
   agent any
+  environment {
+    INVENTORY = credentials('INVENTORY_INI')
+    BRANCH = '{env.BRANCH_NAME'}
+  }
   stages {
             stage('Checkout') {
                 steps {
+                    sh 'echo ${BRANCH}'
                     checkout scm
                 }
              }
             stage('Create Inventory') {
                 steps {
-                    // sh 'echo ${INVENTORY_FILE} | base64 -d'
-                    // sh 'base64 -d ${INVENTORY_FILE} > inventory.ini'
-                    sh 'cp /var/lib/jenkins/mytest-secrets/inventory.ini inventory.ini'
+                    sh 'echo $INVENTORY  | base64 -d > inventory.ini'
                 }
             }
             stage('Docker DM storage') {
