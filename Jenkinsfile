@@ -14,6 +14,7 @@ pipeline {
             stage('Create Inventory') {
                 steps {
                     sh 'echo $INVENTORY  | base64 -d > inventory.ini'
+                    sh 'cat inventory.ini'
                 }
             }
             stage('Docker DM storage') {
