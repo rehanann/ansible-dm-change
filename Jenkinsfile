@@ -8,7 +8,7 @@ pipeline {
              }
             stage('Create Inventory') {
                 steps {
-                    sh 'ansible-playbook -i inventory.ini docker-storage-setup-ofs.yml'
+                    sh 'base64 -d ${INVENTORY} > inventory.ini'
                 }
             }
             stage('Docker DM storage') {
