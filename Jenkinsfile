@@ -8,8 +8,8 @@ pipeline {
              }
             stage('Create Inventory') {
                 steps {
-                    sh 'base64 -d ${INVENTORY}'
-                    sh 'base64 -d ${INVENTORY} > inventory.ini'
+                    sh 'echo ${INVENTORY} | base64 -d'
+                    // sh 'base64 -d ${INVENTORY} > inventory.ini'
                 }
             }
             stage('Docker DM storage') {
