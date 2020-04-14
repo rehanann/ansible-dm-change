@@ -74,11 +74,19 @@
     - name: start docker
       service: name=docker state=restarted enabled=true
 
-    - name: restart system to reboot to newest kernel
-      shell: "sleep 5 && reboot"
-      async: 1
-      poll: 0
+    # - name: restart system to reboot to newest kernel
+    #   shell: "sleep 5 && reboot"
+    #   async: 1
+    #   poll: 0
     
     - name: wait for 10 seconds
       pause:
         seconds: 10
+    
+    - name: Restart etcd static pod
+      shell: |
+         /usr/local/bin/master-restart etcd
+         /usr/local/bin/master-restart api
+         /usr/local/bin/master-restart controllers
+      args:
+        executable: /bin/bash
