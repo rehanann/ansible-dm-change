@@ -2,6 +2,14 @@
 - hosts: nodes
   become: yes
   become_user: root
+  pre_tasks:
+    - name: Create Dir for stopping etcd, api, controller
+      file:
+        path: /etc/origin/node/pods/temp
+        state: directory
+        mode: '0755'
+      when: ansible_hostname == 'master-1'
+
   tasks:
     - name: Drain PODS
       shell: oc adm manage-node --schedulable=false master-1
@@ -19,13 +27,6 @@
       service: 
         name: origin-node.service 
         state: stopped
-      when: ansible_hostname == 'master-1'
-    
-    - name: Create Dir for stopping etcd, api, controller
-      file:
-        path: /etc/origin/node/pods/temp
-        state: directory
-        mode: '0755'
       when: ansible_hostname == 'master-1'
     
     - name: move etc, api, controller pods yaml to diffrent location
