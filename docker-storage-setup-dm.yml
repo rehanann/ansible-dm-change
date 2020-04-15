@@ -142,16 +142,28 @@
   # Infra and Worker Nodes
 
     - name: Drain PODS
-      shell: oc adm manage-node --schedulable=false master-1
+      shell: oc adm manage-node --schedulable=false infra-1
       args:
         executable: /bin/bash
-      when: ansible_hostname != 'master-1'
+      when: ansible_hostname == 'master-1'
     
     - name: Drain PODS
-      shell: oc adm drain --force --ignore-daemonsets master-1
+      shell: oc adm drain --force --ignore-daemonsets infra-1
       args:
         executable: /bin/bash
-      when: ansible_hostname != 'master-1'
+      when: ansible_hostname == 'master-1'
+    
+    - name: Drain PODS
+      shell: oc adm manage-node --schedulable=false worker-1
+      args:
+        executable: /bin/bash
+      when: ansible_hostname == 'master-1'
+    
+    - name: Drain PODS
+      shell: oc adm drain --force --ignore-daemonsets worker-1
+      args:
+        executable: /bin/bash
+      when: ansible_hostname == 'master-1'
     
     - name: Stop Openshift Node process on Infra and Worker
       service: 
