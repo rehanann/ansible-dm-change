@@ -133,7 +133,7 @@
     
   # Infra and Worker Nodes
 
-  - name: Drain PODS
+    - name: Drain PODS
       shell: oc adm manage-node --schedulable=false master-1
       args:
         executable: /bin/bash
