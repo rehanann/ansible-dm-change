@@ -5,10 +5,14 @@
   tasks:
     - name: Drain PODS
       shell: oc adm manage-node --schedulable=false master-1
+      args:
+        executable: /bin/bash
       when: ansible_hostname == 'master-1'
     
     - name: Drain PODS
       shell: oc adm drain --force --ignore-daemonsets master-1
+      args:
+        executable: /bin/bash
       when: ansible_hostname == 'master-1'
     
     - name: Stop Openshift Node process on Master
@@ -32,10 +36,14 @@
 
     - name: Remove everything from /var/lib/docker
       shell: rm -rf /var/lib/docker/*
+      args:
+        executable: /bin/bash
       when: ansible_hostname == 'master-1'
     
     - name: Remove everything from /var/lib/docker
       shell: container-storage-setup --reset
+      args:
+        executable: /bin/bash
       when: ansible_hostname == 'master-1'
 
     - name: Unmount a mounted volume
@@ -127,10 +135,14 @@
 
   - name: Drain PODS
       shell: oc adm manage-node --schedulable=false master-1
+      args:
+        executable: /bin/bash
       when: ansible_hostname == 'infra-1' or ansible_hostname == 'worker-1'
     
     - name: Drain PODS
       shell: oc adm drain --force --ignore-daemonsets master-1
+      args:
+        executable: /bin/bash
       when: ansible_hostname == 'infra-1' or ansible_hostname == 'worker-1'
     
     - name: Stop Openshift Node process on Master
@@ -145,10 +157,14 @@
 
     - name: Remove everything from /var/lib/docker
       shell: rm -rf /var/lib/docker/*
+      args:
+        executable: /bin/bash
       when: ansible_hostname == 'infra-1' or ansible_hostname == 'worker-1'
     
     - name: Remove everything from /var/lib/docker
       shell: container-storage-setup --reset
+      args:
+        executable: /bin/bash
       when: ansible_hostname == 'infra-1' or ansible_hostname == 'worker-1'
 
     - name: Unmount a mounted volume
