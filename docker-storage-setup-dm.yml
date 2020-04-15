@@ -16,7 +16,9 @@
       when: ansible_hostname == 'master-1'
     
     - name: Stop Openshift Node process on Master
-      service: name=origin-node.service state=stopped
+      service: 
+        name: origin-node.service 
+        state: stopped
       when: ansible_hostname == 'master-1'
     
     - name: Create Dir for stopping etcd, api, controller
@@ -31,7 +33,9 @@
       when: ansible_hostname == 'master-1'
       
     - name: stop docker
-      service: name=docker state=stopped
+      service: 
+        name: docker 
+        state: stopped
         ignore_errors: yes
       when: ansible_hostname == 'master-1'
 
@@ -123,7 +127,10 @@
       when: ansible_hostname == 'master-1'
 
     - name: start docker
-      service: name=docker state=restarted enabled=true
+      service: 
+        name: docker 
+        state: restarted 
+        enabled: true
       when: ansible_hostname == 'master-1'
     
     - name: restart system
@@ -147,12 +154,16 @@
       when: ansible_hostname != 'master-1'
     
     - name: Stop Openshift Node process on Infra and Worker
-      service: name=origin-node.service state=stopped
+      service: 
+        name: origin-node.service 
+        state: stopped
       when: ansible_hostname != 'master-1'
     
    
     - name: stop docker
-      service: name=docker state=stopped
+      service: 
+        name: docker 
+        state: stopped
       ignore_errors: yes
       when: ansible_hostname != 'master-1'
 
@@ -234,7 +245,10 @@
       when: ansible_hostname != 'master-1'
 
     - name: start docker
-      service: name=docker state=restarted enabled=true
+      service: 
+        name: docker 
+        state: restarted 
+        enabled: true
       when: ansible_hostname != 'master-1'
     
     - name: restart system
