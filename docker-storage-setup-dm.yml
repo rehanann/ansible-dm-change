@@ -9,6 +9,23 @@
         state: directory
         mode: '0755'
       when: ansible_hostname == 'master-1'
+    
+    - name: remove any existing docker-storage config file
+      file:
+        path: /etc/sysconfig/docker-storage
+        state: absent
+      # when: ansible_hostname == 'master-1'
+    
+    - block:
+        - name: create the docker-storage-setup devicemapper config file
+          template:
+            src: "docker-storage-setup-dm"
+            dest: /etc/sysconfig/docker-storage-setup
+            owner: root
+            group: root
+            mode: 0644
+      when:
+        - ansible_distribution == "CentOS"
 
   tasks:
     - name: Drain PODS
@@ -89,22 +106,22 @@
     #     dev: /dev/mapper/vg_docker-rhel--docker--pool
     #     when: ansible_hostname == 'master-1'
 
-    - name: remove any existing docker-storage config file
-      file:
-        path: /etc/sysconfig/docker-storage
-        state: absent
-      when: ansible_hostname == 'master-1'
+    # - name: remove any existing docker-storage config file
+    #   file:
+    #     path: /etc/sysconfig/docker-storage
+    #     state: absent
+    #   when: ansible_hostname == 'master-1'
     
-    - block:
-        - name: create the docker-storage-setup devicemapper config file
-          template:
-            src: "docker-storage-setup-dm"
-            dest: /etc/sysconfig/docker-storage-setup
-            owner: root
-            group: root
-            mode: 0644
-      when:
-        - ansible_distribution == "CentOS" and ansible_hostname == 'master-1'
+    # - block:
+    #     - name: create the docker-storage-setup devicemapper config file
+    #       template:
+    #         src: "docker-storage-setup-dm"
+    #         dest: /etc/sysconfig/docker-storage-setup
+    #         owner: root
+    #         group: root
+    #         mode: 0644
+    #   when:
+    #     - ansible_distribution == "CentOS" and ansible_hostname == 'master-1'
       
     
     - name: Run docker-storage setup on /dev/sdb
@@ -217,28 +234,28 @@
       command: "wipefs -af /dev/sdb"
       when: ansible_hostname != 'master-1'
 
-    - name: remove any existing docker-storage config file
-      file:
-        path: /etc/sysconfig/docker-storage
-        state: absent
-      when: ansible_hostname != 'master-1'
+    # - name: remove any existing docker-storage config file
+    #   file:
+    #     path: /etc/sysconfig/docker-storage
+    #     state: absent
+    #   when: ansible_hostname != 'master-1'
 
-    - name: remove any existing docker-storage config file
-      file:
-        path: /etc/sysconfig/docker-storage
-        state: absent
-      when: ansible_hostname != 'master-1'
+    # - name: remove any existing docker-storage config file
+    #   file:
+    #     path: /etc/sysconfig/docker-storage
+    #     state: absent
+    #   when: ansible_hostname != 'master-1'
     
-    - block:
-        - name: create the docker-storage-setup devicemapper config file
-          template:
-            src: "docker-storage-setup-dm"
-            dest: /etc/sysconfig/docker-storage-setup
-            owner: root
-            group: root
-            mode: 0644
-      when:
-        - ansible_distribution == "CentOS" and ansible_hostname != 'master-1'
+    # - block:
+    #     - name: create the docker-storage-setup devicemapper config file
+    #       template:
+    #         src: "docker-storage-setup-dm"
+    #         dest: /etc/sysconfig/docker-storage-setup
+    #         owner: root
+    #         group: root
+    #         mode: 0644
+    #   when:
+    #     - ansible_distribution == "CentOS" and ansible_hostname != 'master-1'
       
     
     - name: Run docker-storage setup on /dev/sdb
