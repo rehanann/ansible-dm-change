@@ -7,50 +7,51 @@
       shell: oc adm manage-node --schedulable=false master-1
       args:
         executable: /bin/bash
-      when: ansible_hostname == 'master-1'
+      when: ansible_facts['ansible_hostname'] == 'master-1'
     
     - name: Drain PODS
       shell: oc adm drain --force --ignore-daemonsets master-1
       args:
         executable: /bin/bash
-      when: ansible_hostname == 'master-1'
+      when: ansible_facts['ansible_hostname'] == 'master-1'
     
     - name: Stop Openshift Node process on Master
       service: name=origin-node.service state=stopped
-      when: ansible_hostname == 'master-1'
+      when: ansible_facts['ansible_hostname'] == 'master-1'
     
     - name: Create Dir for stopping etcd, api, controller
       file:
         path: /etc/origin/node/pods/temp
         state: directory
         mode: '0755'
-        when: ansible_hostname == 'master-1'
+        when: ansible_facts['ansible_hostname'] == 'master-1'
     
     - name: move etc, api, controller pods yaml to diffrent location
       command: mv /etc/origin/node/pods/* /etc/origin/node/pods/temp
+      when: ansible_facts['ansible_hostname'] == 'master-1'
       
     - name: stop docker
       service: name=docker state=stopped
       ignore_errors: yes
-      when: ansible_hostname == 'master-1'
+      when: ansible_facts['ansible_hostname'] == 'master-1'
 
     - name: Remove everything from /var/lib/docker
       shell: rm -rf /var/lib/docker/*
       args:
         executable: /bin/bash
-      when: ansible_hostname == 'master-1'
+      when: ansible_facts['ansible_hostname'] == 'master-1'
     
     - name: Remove everything from /var/lib/docker
       shell: container-storage-setup --reset
       args:
         executable: /bin/bash
-      when: ansible_hostname == 'master-1'
+      when: ansible_facts['ansible_hostname'] == 'master-1'
 
     - name: Unmount a mounted volume
       mount:
         path: /var/lib/docker
         state: unmounted
-        when: ansible_hostname == 'master-1'
+        when: ansible_facts['ansible_hostname'] == 'master-1'
 
     - name: Remove the logical volume.
       lvol:
@@ -58,14 +59,14 @@
         lv: lv_docker
         state: absent
         force: yes
-        when: ansible_hostname == 'master-1'
+        when: ansible_facts['ansible_hostname'] == 'master-1'
     
     - name: Create a volume group on top of /dev/sdb with physical extent size = 128KiB
       lvg:
         vg: vg_docker
         state: absent
         force: yes
-        when: ansible_hostname == 'master-1'
+        when: ansible_facts['ansible_hostname'] == 'master-1'
     
     - name: Run Wipefs on /dev/sdb
       command: "wipefs -af /dev/sdb"
@@ -75,7 +76,7 @@
       file:
         path: /etc/sysconfig/docker-storage
         state: absent
-        when: ansible_hostname == 'master-1'
+        when: ansible_facts['ansible_hostname'] == 'master-1'
         
     # - name: Create a xfs filesystem on /dev/sdb1
     #   filesystem:
@@ -87,7 +88,7 @@
       file:
         path: /etc/sysconfig/docker-storage
         state: absent
-        when: ansible_hostname == 'master-1'
+        when: ansible_facts['ansible_hostname'] == 'master-1'
     
     - block:
         - name: create the docker-storage-setup devicemapper config file
@@ -98,12 +99,12 @@
             group: root
             mode: 0644
       when:
-        - ansible_distribution == "CentOS" and ansible_hostname == 'master-1'
+        - ansible_distribution == "CentOS" and ansible_facts['ansible_hostname'] == 'master-1'
       
     
     - name: Run docker-storage setup on /dev/sdb
       command: "docker-storage-setup"
-      when: ansible_hostname == 'master-1'
+      when: ansible_facts['ansible_hostname'] == 'master-1'
 
     # - name: Install Docker
     #   package: name=docker state=present
@@ -115,7 +116,7 @@
         src:  /dev/mapper/vg_docker-rhel--docker--pool
         fstype: xfs
         state: present
-        when: ansible_hostname == 'master-1'
+        when: ansible_facts['ansible_hostname'] == 'master-1'
 
     - name: move etc, api, controller pods yaml to diffrent location
       command: mv /etc/origin/node/pods/temp/* /etc/origin/node/pods/
@@ -123,13 +124,13 @@
 
     - name: start docker
       service: name=docker state=restarted enabled=true
-      when: ansible_hostname == 'master-1'
+      when: ansible_facts['ansible_hostname'] == 'master-1'
     
     - name: restart system
       shell: "sleep 5 && reboot"
       async: 1
       poll: 0
-      when: ansible_hostname != 'master-1'
+      when: ansible_facts['ansible_hostname'] == 'master-1'
     
   # Infra and Worker Nodes
 
@@ -137,41 +138,41 @@
       shell: oc adm manage-node --schedulable=false master-1
       args:
         executable: /bin/bash
-      when: ansible_hostname != 'master-1'
+      when: ansible_facts['ansible_hostname'] != 'master-1'
     
     - name: Drain PODS
       shell: oc adm drain --force --ignore-daemonsets master-1
       args:
         executable: /bin/bash
-      when: ansible_hostname != 'master-1'
+      when: ansible_facts['ansible_hostname'] != 'master-1'
     
     - name: Stop Openshift Node process on Master
       service: name=origin-node.service state=stopped
-      when: ansible_hostname != 'master-1'
+      when: ansible_facts['ansible_hostname'] != 'master-1'
     
    
     - name: stop docker
       service: name=docker state=stopped
       ignore_errors: yes
-      when: ansible_hostname != 'master-1'
+      when: ansible_facts['ansible_hostname'] != 'master-1'
 
     - name: Remove everything from /var/lib/docker
       shell: rm -rf /var/lib/docker/*
       args:
         executable: /bin/bash
-      when: ansible_hostname != 'master-1'
+      when: ansible_facts['ansible_hostname'] != 'master-1'
     
     - name: Remove everything from /var/lib/docker
       shell: container-storage-setup --reset
       args:
         executable: /bin/bash
-      when: ansible_hostname != 'master-1'
+      when: ansible_facts['ansible_hostname'] != 'master-1'
 
     - name: Unmount a mounted volume
       mount:
         path: /var/lib/docker
         state: unmounted
-        when: ansible_hostname != 'master-1'
+        when: ansible_facts['ansible_hostname'] != 'master-1'
 
     - name: Remove the logical volume.
       lvol:
@@ -179,30 +180,30 @@
         lv: lv_docker
         state: absent
         force: yes
-        when: ansible_hostname != 'master-1'
+        when: ansible_facts['ansible_hostname'] != 'master-1'
     
     - name: Create a volume group on top of /dev/sdb with physical extent size = 128KiB
       lvg:
         vg: vg_docker
         state: absent
         force: yes
-        when: ansible_hostname != 'master-1'
+        when: ansible_facts['ansible_hostname'] != 'master-1'
     
     - name: Run Wipefs on /dev/sdb
       command: "wipefs -af /dev/sdb"
-      when: ansible_hostname != 'master-1'
+      when: ansible_facts['ansible_hostname'] != 'master-1'
 
     - name: remove any existing docker-storage config file
       file:
         path: /etc/sysconfig/docker-storage
         state: absent
-        when: ansible_hostname != 'master-1'
+        when: ansible_facts['ansible_hostname'] != 'master-1'
 
     - name: remove any existing docker-storage config file
       file:
         path: /etc/sysconfig/docker-storage
         state: absent
-        when: ansible_hostname != 'master-1'
+        when: ansible_facts['ansible_hostname'] != 'master-1'
     
     - block:
         - name: create the docker-storage-setup devicemapper config file
@@ -213,12 +214,12 @@
             group: root
             mode: 0644
       when:
-        - ansible_distribution == "CentOS" and ansible_hostname != 'master-1'
+        - ansible_distribution == "CentOS" and ansible_facts['ansible_hostname'] != 'master-1'
       
     
     - name: Run docker-storage setup on /dev/sdb
       command: "docker-storage-setup"
-      when: ansible_hostname != 'master-1'
+      when: ansible_facts['ansible_hostname'] != 'master-1'
     
     - name: Mount up device by label
       mount:
@@ -226,18 +227,18 @@
         src:  /dev/mapper/vg_docker-rhel--docker--pool
         fstype: xfs
         state: present
-        when: ansible_hostname != 'master-1'
+        when: ansible_facts['ansible_hostname'] != 'master-1'
 
     - name: move etc, api, controller pods yaml to diffrent location
       command: mv /etc/origin/node/pods/temp/* /etc/origin/node/pods/
-      when: ansible_hostname != 'master-1'
+      when: ansible_facts['ansible_hostname'] != 'master-1'
 
     - name: start docker
       service: name=docker state=restarted enabled=true
-      when: ansible_hostname != 'master-1'
+      when: ansible_facts['ansible_hostname'] != 'master-1'
     
     - name: restart system
       shell: "sleep 5 && reboot"
       async: 1
       poll: 0
-      when: ansible_hostname != 'master-1'
+      when: ansible_facts['ansible_hostname'] != 'master-1'
