@@ -47,9 +47,17 @@
       when: ansible_hostname == 'master-1'
     
     - name: move etc, api, controller pods yaml to diffrent location
-      command: mv /etc/origin/node/pods/* /var/temp/
+      command: mv /etc/origin/node/pods/etcd.yaml /etc/origin/node/pods/_etcd.yaml
       when: ansible_hostname == 'master-1'
-      
+    
+    - name: move etc, api, controller pods yaml to diffrent location
+      command: mv /etc/origin/node/pods/apiserver.yaml /etc/origin/node/pods/_apiserver.yaml
+      when: ansible_hostname == 'master-1'
+    
+    - name: move etc, api, controller pods yaml to diffrent location
+      command: mv /etc/origin/node/pods/controller.yaml /etc/origin/node/pods/_controller.yaml
+      when: ansible_hostname == 'master-1'
+
     - name: stop docker
       service: 
         name: docker 
@@ -141,7 +149,15 @@
       when: ansible_hostname == 'master-1'
 
     - name: move etc, api, controller pods yaml to diffrent location
-      command: mv /etc/origin/node/pods/temp/* /etc/origin/node/pods/
+      command: mv /etc/origin/node/pods/_etcd.yaml /etc/origin/node/pods/etcd.yaml
+      when: ansible_hostname == 'master-1'
+    
+    - name: move etc, api, controller pods yaml to diffrent location
+      command: mv /etc/origin/node/pods/_apiserver.yaml /etc/origin/node/pods/apiserver.yaml
+      when: ansible_hostname == 'master-1'
+    
+    - name: move etc, api, controller pods yaml to diffrent location
+      command: mv /etc/origin/node/pods/_controller.yaml /etc/origin/node/pods/controller.yaml
       when: ansible_hostname == 'master-1'
 
     - name: start docker
