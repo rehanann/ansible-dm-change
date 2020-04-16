@@ -5,7 +5,7 @@
   pre_tasks:
     - name: Create Dir for stopping etcd, api, controller
       file:
-        path: /etc/origin/node/pods/temp
+        path: /var/temp
         state: directory
         mode: '0755'
       when: ansible_hostname == 'master-1'
@@ -47,7 +47,7 @@
       when: ansible_hostname == 'master-1'
     
     - name: move etc, api, controller pods yaml to diffrent location
-      command: mv /etc/origin/node/pods/* /etc/origin/node/pods/temp
+      command: mv /etc/origin/node/pods/* /var/temp/
       when: ansible_hostname == 'master-1'
       
     - name: stop docker
