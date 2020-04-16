@@ -28,17 +28,17 @@
         - ansible_distribution == "CentOS"
 
   tasks:
-    - name: Drain PODS
-      shell: oc adm manage-node master-1 --schedulable=false 
-      args:
-        executable: /bin/bash
-      when: ansible_hostname == 'master-1'
+    # - name: Drain PODS
+    #   shell: oc adm manage-node master-1 --schedulable=false 
+    #   args:
+    #     executable: /bin/bash
+    #   when: ansible_hostname == 'master-1'
     
-    - name: Drain PODS
-      shell: oc adm drain master-1 --force --ignore-daemonsets 
-      args:
-        executable: /bin/bash
-      when: ansible_hostname == 'master-1'
+    # - name: Drain PODS
+    #   shell: oc adm drain master-1 --force --ignore-daemonsets 
+    #   args:
+    #     executable: /bin/bash
+    #   when: ansible_hostname == 'master-1'
     
     - name: Stop Openshift Node process on Master
       service: 
