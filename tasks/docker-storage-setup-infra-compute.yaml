@@ -41,7 +41,7 @@
     service: 
       name: docker 
       state: stopped
-      ignore_errors: yes
+    ignore_errors: yes
 
   - name: Remove everything from /var/lib/docker
     shell: rm -rf /var/lib/docker/*
