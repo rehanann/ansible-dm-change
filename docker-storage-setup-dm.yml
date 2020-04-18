@@ -3,13 +3,6 @@
   become: yes
   become_user: root
   pre_tasks:
-    - name: Create Dir for stopping etcd, api, controller
-      file:
-        path: /var/temp
-        state: directory
-        mode: '0755'
-      # when: ansible_hostname == 'master-1'
-    
     - name: remove any existing docker-storage config file
       file:
         path: /etc/sysconfig/docker-storage
@@ -63,7 +56,7 @@
         name: docker 
         state: stopped
         ignore_errors: yes
-        
+
       # when: ansible_hostname == 'master-1'
 
     - name: Remove everything from /var/lib/docker
