@@ -126,15 +126,15 @@
         fstype: xfs
         state: present
       
-    - name: start docker
-      service: 
-        name: docker 
-        state: restarted 
-        enabled: true
+    # - name: start docker
+    #   service: 
+    #     name: docker 
+    #     state: restarted 
+    #     enabled: true
       
     
-    - name: restart system
-      shell: "sleep 5 && reboot"
-      async: 1
-      poll: 0
+    # - name: restart system
+    #   shell: "sleep 5 && reboot"
+    #   async: 1
+    #   poll: 0
       
