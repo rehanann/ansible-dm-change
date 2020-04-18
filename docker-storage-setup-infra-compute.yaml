@@ -7,7 +7,7 @@
       file:
         path: /etc/sysconfig/docker-storage
         state: absent
-      when: ansible_hostname != 'master-1'
+      # when: ansible_facts['ansible_hostname'] != "master-1"
       
     - block:
         - name: create the docker-storage-setup devicemapper config file
@@ -17,32 +17,31 @@
             owner: root
             group: root
             mode: 0644
-      when:
-        - ansible_distribution == "CentOS" and ansible_hostname != 'master-1'
+      # when: ansible_facts['ansible_hostname'] != "master-1"
   tasks:
-    # - name: Drain PODS
-    #   shell: oc adm manage-node infra-1 --schedulable=false 
-    #   args:
-    #     executable: /bin/bash
-    #   when: ansible_hostname == 'master-1'
+    - name: Drain PODS
+      shell: oc adm manage-node infra-1 --schedulable=false 
+      args:
+        executable: /bin/bash
+      when: ansible_facts['ansible_hostname'] == "master-1"
     
-    # - name: Drain PODS
-    #   shell: oc adm drain infra-1 --force --ignore-daemonsets 
-    #   args:
-    #     executable: /bin/bash
-    #   when: ansible_hostname == 'master-1'
+    - name: Drain PODS
+      shell: oc adm drain infra-1 --force --ignore-daemonsets 
+      args:
+        executable: /bin/bash
+      when: ansible_hostname == 'master-1'
     
-    # - name: Drain PODS
-    #   shell: oc adm manage-node worker-1 --schedulable=false 
-    #   args:
-    #     executable: /bin/bash
-    #   when: ansible_hostname == 'master-1'
+    - name: Drain PODS
+      shell: oc adm manage-node worker-1 --schedulable=false 
+      args:
+        executable: /bin/bash
+      when: ansible_hostname == 'master-1'
     
-    # - name: Drain PODS
-    #   shell: oc adm drain worker-1 --force --ignore-daemonsets 
-    #   args:
-    #     executable: /bin/bash
-    #   when: ansible_hostname == 'master-1'
+    - name: Drain PODS
+      shell: oc adm drain worker-1 --force --ignore-daemonsets 
+      args:
+        executable: /bin/bash
+      when: ansible_hostname == 'master-1'
     
     - name: Stop Openshift Node process on Infra and Worker
       service: 
