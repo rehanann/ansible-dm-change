@@ -1,4 +1,4 @@
--
+# -
 # pre_tasks:
 #   - name: remove any existing docker-storage config file
 #     file:
@@ -14,7 +14,7 @@
     #         group: root
     #         mode: 0644
 
-tasks:
+# tasks:
   - name: Drain PODS
     shell: oc adm manage-node {{ item }} --schedulable=false 
     args:
