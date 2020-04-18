@@ -23,7 +23,7 @@
       shell: oc adm manage-node {{ item }} --schedulable=false 
       args:
         executable: /bin/bash
-      when: ansible_facts['ansible_hostname'] == "master-1"
+      when: ansible_hostname == "master-1"
       loop:
         - worker-1
     
@@ -31,7 +31,7 @@
       shell: oc adm drain {{ item }} --force --ignore-daemonsets 
       args:
         executable: /bin/bash
-      when: ansible_facts['ansible_hostname'] == "master-1"
+      when: ansible_hostname == "master-1"
       loop:
         - worker-1
     
