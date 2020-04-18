@@ -62,7 +62,8 @@
       service: 
         name: docker 
         state: stopped
-        # ignore_errors: yes
+        ignore_errors: yes
+        
       # when: ansible_hostname == 'master-1'
 
     - name: Remove everything from /var/lib/docker
