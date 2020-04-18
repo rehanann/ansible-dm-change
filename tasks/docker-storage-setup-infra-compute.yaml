@@ -129,8 +129,8 @@
     #     enabled: true
       
     
-    # - name: restart system
-    #   shell: "sleep 5 && reboot"
-    #   async: 1
-    #   poll: 0
+    - name: restart system
+      shell: "sleep 5 && reboot"
+      async: 1
+      poll: 0
       
