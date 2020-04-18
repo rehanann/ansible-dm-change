@@ -1,9 +1,9 @@
 -
-pre_tasks:
-  - name: remove any existing docker-storage config file
-    file:
-      path: /etc/sysconfig/docker-storage
-      state: absent
+# pre_tasks:
+#   - name: remove any existing docker-storage config file
+#     file:
+#       path: /etc/sysconfig/docker-storage
+#       state: absent
       
     # - block:
     #     - name: create the docker-storage-setup devicemapper config file
