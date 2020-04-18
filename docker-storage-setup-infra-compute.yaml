@@ -61,6 +61,13 @@
       mount:
         path: /var/lib/docker
         state: unmounted
+    
+    - name: remove Mount /etc/filesystem
+      mount:
+        path: /var/lib/docker
+        src:  /dev/mapper/vg_docker-lv_docker
+        fstype: xfs
+        state: absent
       
 
     - name: Remove the logical volume.
@@ -115,7 +122,7 @@
     - name: Mount up device by label
       mount:
         path: /var/lib/docker
-        src:  /dev/mapper/vg_docker-rhel--docker--pool
+        src:  /dev/mapper/docker--vg-docker--pool
         fstype: xfs
         state: present
       
