@@ -1,4 +1,4 @@
----
+-
 pre_tasks:
   - name: remove any existing docker-storage config file
     file:
