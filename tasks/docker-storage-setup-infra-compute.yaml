@@ -8,14 +8,14 @@
         path: /etc/sysconfig/docker-storage
         state: absent
       
-    - block:
-        - name: create the docker-storage-setup devicemapper config file
-          template:
-            src: "docker-storage-setup-dm"
-            dest: /etc/sysconfig/docker-storage-setup
-            owner: root
-            group: root
-            mode: 0644
+    # - block:
+    #     - name: create the docker-storage-setup devicemapper config file
+    #       template:
+    #         src: "docker-storage-setup-dm"
+    #         dest: /etc/sysconfig/docker-storage-setup
+    #         owner: root
+    #         group: root
+    #         mode: 0644
 
   tasks:
     - name: Drain PODS
@@ -107,23 +107,23 @@
       
     #===========================================================================
 
-    - name: Run docker-storage setup on /dev/sdb
-      command: "docker-storage-setup"
+    # - name: Run docker-storage setup on /dev/sdb
+    #   command: "docker-storage-setup"
     
-    - name: remove Mount /etc/filesystem
-      mount:
-        path: /var/lib/docker
-        src:  /dev/mapper/vg_docker-lv_docker
-        fstype: xfs
-        state: absent
+    # - name: remove Mount /etc/filesystem
+    #   mount:
+    #     path: /var/lib/docker
+    #     src:  /dev/mapper/vg_docker-lv_docker
+    #     fstype: xfs
+    #     state: absent
       
     
-    - name: Mount up device by label
-      mount:
-        path: /var/lib/docker
-        src:  /dev/mapper/docker--vg-docker--pool
-        fstype: xfs
-        state: present
+    # - name: Mount up device by label
+    #   mount:
+    #     path: /var/lib/docker
+    #     src:  /dev/mapper/docker--vg-docker--pool
+    #     fstype: xfs
+    #     state: present
       
     # - name: start docker
     #   service: 

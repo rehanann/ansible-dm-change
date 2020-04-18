@@ -1,0 +1,22 @@
+---
+galaxy_info:
+  author: Vishal Shah
+  description: Creates a thinpool logical volume for docker engine
+  company: BlackRock
+  license:
+    - MIT
+  min_ansible_version: 2.0
+  platforms:
+    - name: EL
+      versions:
+        - all
+
+  galaxy_tags:
+    - docker
+    - devicemapper
+    - direct-lvm
+    - thinpool
+    - lvcreate
+
+dependencies: []
+  
