@@ -5,4 +5,4 @@
   tasks:
   - include: tasks/docker-storage-setup-infra-compute.yaml
   roles:
-  - docker-provision-thinpool
+      - docker-provision-thinpool
