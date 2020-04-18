@@ -119,11 +119,6 @@
         fstype: xfs
         state: present
       
-
-    - name: move etc, api, controller pods yaml to diffrent location
-      command: mv /etc/origin/node/pods/temp/* /etc/origin/node/pods/
-      
-
     - name: start docker
       service: 
         name: docker 
