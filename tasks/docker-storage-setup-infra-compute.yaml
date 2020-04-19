@@ -1,132 +1,135 @@
-# -
-# pre_tasks:
-#   - name: remove any existing docker-storage config file
-#     file:
-#       path: /etc/sysconfig/docker-storage
-#       state: absent
-      
-    # - block:
-    #     - name: create the docker-storage-setup devicemapper config file
-    #       template:
-    #         src: "docker-storage-setup-dm"
-    #         dest: /etc/sysconfig/docker-storage-setup
-    #         owner: root
-    #         group: root
-    #         mode: 0644
+---
+- hosts: nodes
+  become: yes
+  become_user: root
+  pre_tasks:
+    - name: remove any existing docker-storage config file
+      file:
+        path: /etc/sysconfig/docker-storage
+        state: absent
+        
+      - block:
+          - name: create the docker-storage-setup devicemapper config file
+            template:
+              src: "docker-storage-setup-dm"
+              dest: /etc/sysconfig/docker-storage-setup
+              owner: root
+              group: root
+              mode: 0644
 
-# tasks:
-  - name: Drain PODS
-    shell: oc adm manage-node {{ item }} --schedulable=false 
-    args:
-      executable: /bin/bash
-    when: ansible_hostname == "master-1"
-    loop:
-     - worker-1
+  tasks:
+    - name: Drain PODS
+      shell: oc adm manage-node {{ item }} --schedulable=false 
+      args:
+        executable: /bin/bash
+      when: ansible_hostname == "master-1"
+      loop:
+      - infra-1
+      
+    - name: Drain PODS
+      shell: oc adm drain {{ item }} --force --ignore-daemonsets 
+      args:
+        executable: /bin/bash
+      when: ansible_hostname == "master-1"
+      loop:
+        - infra-1
+      
+    - name: Stop Openshift Node process on Infra and Worker
+      service: 
+        name: origin-node.service 
+        state: stopped
+      
+    - name: stop docker
+      service: 
+        name: docker 
+        state: stopped
+      ignore_errors: yes
     
-  - name: Drain PODS
-    shell: oc adm drain {{ item }} --force --ignore-daemonsets 
-    args:
-      executable: /bin/bash
-    when: ansible_hostname == "master-1"
-    loop:
-      - worker-1
-    
-  - name: Stop Openshift Node process on Infra and Worker
-    service: 
-      name: origin-node.service 
-      state: stopped
-    
-  - name: stop docker
-    service: 
-      name: docker 
-      state: stopped
-    ignore_errors: yes
-  
 
-  - name: Unmount dockers overlays
-    shell: df -h | grep docker | awk '{print $6}' | xargs umount
-    args:
-      executable: /bin/bash
-    
-  # - name: Unmount a mounted volume
-  #   mount:
-  #     path: /var/lib/docker
-  #     fstype: xfs
-  #     state: absent
-    
-  - name: Remove everything from /var/lib/docker
-    shell: rm -rf /var/lib/docker/*
-    args:
-      executable: /bin/bash
-    
-  - name: Remove everything 
-    shell: container-storage-setup --reset
-    args:
-      executable: /bin/bash
+    - name: Unmount dockers overlays
+      shell: df -h | grep docker | awk '{print $6}' | xargs umount
+      args:
+        executable: /bin/bash
+      
+    # - name: Unmount a mounted volume
+    #   mount:
+    #     path: /var/lib/docker
+    #     fstype: xfs
+    #     state: absent
+      
+    - name: Remove everything from /var/lib/docker
+      shell: rm -rf /var/lib/docker/*
+      args:
+        executable: /bin/bash
+      
+    - name: Remove everything 
+      shell: container-storage-setup --reset
+      args:
+        executable: /bin/bash
 
-  - name: Remove the logical volume.
-    lvol:
-      vg: vg_docker
-      lv: lv_docker
-      state: absent
-      force: yes
+    - name: Remove the logical volume.
+      lvol:
+        vg: vg_docker
+        lv: lv_docker
+        state: absent
+        force: yes
+        
       
-    
-  - name: Create a volume group on top of /dev/sdb with physical extent size = 128KiB
-    lvg:
-      vg: vg_docker
-      state: absent
-      force: yes
+    - name: Create a volume group on top of /dev/sdb with physical extent size = 128KiB
+      lvg:
+        vg: vg_docker
+        state: absent
+        force: yes
+        
       
-    
-  - name: Run Wipefs on /dev/sdb
-    command: "wipefs -af /dev/sdb"
-      
+    - name: Run Wipefs on /dev/sdb
+      command: "wipefs -af /dev/sdb"
+        
 
-    #==========================================================
-  - name: remove any existing docker-storage config file
-    file:
-      path: /etc/sysconfig/docker-storage
-      state: absent
-   
-  - block:
-      - name: create the docker-storage-setup devicemapper config file
-        template:
-          src: "docker-storage-setup-dm"
-          dest: /etc/sysconfig/docker-storage-setup
-          owner: root
-          group: root
-          mode: 0644
-      
-    #===========================================================================
+      #==========================================================
+    - name: remove any existing docker-storage config file
+      file:
+        path: /etc/sysconfig/docker-storage
+        state: absent
+    
+    - block:
+        - name: create the docker-storage-setup devicemapper config file
+          template:
+            src: "docker-storage-setup-dm"
+            dest: /etc/sysconfig/docker-storage-setup
+            owner: root
+            group: root
+            mode: 0644
+        
+      #===========================================================================
 
-  - name: Run docker-storage setup on /dev/sdb
-    command: "docker-storage-setup"
-    
-  - name: remove Mount /etc/fstab
-    mount:
-      path: /var/lib/docker
-      src:  /dev/mapper/vg_docker-lv_docker
-      fstype: xfs
-      state: absent
+    - name: Run docker-storage setup on /dev/sdb
+      command: "docker-storage-setup"
       
-    
-  - name: Mount up device by label
-    mount:
-      path: /var/lib/docker
-      src:  /dev/mapper/docker--vg-docker--pool
-      fstype: xfs
-      state: present
+    - name: remove Mount /etc/fstab
+      mount:
+        path: /var/lib/docker
+        src:  /dev/mapper/vg_docker-lv_docker
+        fstype: xfs
+        state: absent
+        
       
-  - name: start docker
-    service: 
-      name: docker 
-      state: restarted 
-      enabled: true
+    - name: Mount up device by label
+      mount:
+        path: /var/lib/docker
+        src:  /dev/mapper/docker--vg-docker--pool
+        fstype: xfs
+        state: present
+        
+    - name: start docker
+      service: 
+        name: docker 
+        state: restarted 
+        enabled: true
+        
       
-    
-  # - name: restart system
-  #   shell: "sleep 5 && reboot"
-  #   async: 1
-  #   poll: 0
-      
+    # - name: restart system
+    #   shell: "sleep 5 && reboot"
+    #   async: 1
+    #   poll: 0
+        

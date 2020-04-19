@@ -18,7 +18,7 @@ pipeline {
                 steps {
                     // sh 'ansible-playbook -i inventory.ini docker-storage-setup-dm.yml'
                     // sh 'ansible-playbook -i inventory.ini docker-storage-setup-infra-compute.yaml'
-                    sh 'ansible-playbook -i inventory.ini main.yaml'
+                    sh 'ansible-playbook -i inventory.ini tasks/docker-storage-setup-infra-compute.yaml'
             }
         }
     }
