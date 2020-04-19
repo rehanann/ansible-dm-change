@@ -41,7 +41,13 @@
       name: docker 
       state: stopped
     ignore_errors: yes
+  
 
+  - name: Unmount dockers overlays
+    shell: df -h | grep docker | awk '{print $6}' | xargs umount
+    args:
+      executable: /bin/bash
+    
   - name: Unmount a mounted volume
     mount:
       path: /var/lib/docker
