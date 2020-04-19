@@ -21,7 +21,7 @@
       executable: /bin/bash
     when: ansible_hostname == "master-1"
     loop:
-     - worker-1
+     - infra-1
     
   - name: Drain PODS
     shell: oc adm drain {{ item }} --force --ignore-daemonsets 
@@ -29,7 +29,7 @@
       executable: /bin/bash
     when: ansible_hostname == "master-1"
     loop:
-      - worker-1
+      - infra-1
     
   - name: Stop Openshift Node process on Infra and Worker
     service: 
@@ -57,7 +57,7 @@
     shell: container-storage-setup --reset
     args:
       executable: /bin/bash
-      
+
   - name: Remove the logical volume.
     lvol:
       vg: vg_docker
@@ -97,12 +97,12 @@
   - name: Run docker-storage setup on /dev/sdb
     command: "docker-storage-setup"
     
-  # - name: remove Mount /etc/fstab
-  #   mount:
-  #     path: /var/lib/docker
-  #     src:  /dev/mapper/vg_docker-lv_docker
-  #     fstype: xfs
-  #     state: absent
+  - name: remove Mount /etc/fstab
+    mount:
+      path: /var/lib/docker
+      src:  /dev/mapper/vg_docker-lv_docker
+      fstype: xfs
+      state: absent
       
     
   - name: Mount up device by label
@@ -112,11 +112,11 @@
       fstype: xfs
       state: present
       
-    # - name: start docker
-    #   service: 
-    #     name: docker 
-    #     state: restarted 
-    #     enabled: true
+    - name: start docker
+      service: 
+        name: docker 
+        state: restarted 
+        enabled: true
       
     
   # - name: restart system
