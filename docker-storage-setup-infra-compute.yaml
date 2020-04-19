@@ -87,19 +87,19 @@
         
 
       #==========================================================
-    - name: remove any existing docker-storage config file
-      file:
-        path: /etc/sysconfig/docker-storage
-        state: absent
+    # - name: remove any existing docker-storage config file
+    #   file:
+    #     path: /etc/sysconfig/docker-storage
+    #     state: absent
     
-    - block:
-        - name: create the docker-storage-setup devicemapper config file
-          template:
-            src: "docker-storage-setup-dm"
-            dest: /etc/sysconfig/docker-storage-setup
-            owner: root
-            group: root
-            mode: 0644
+    # - block:
+    #     - name: create the docker-storage-setup devicemapper config file
+    #       template:
+    #         src: "docker-storage-setup-dm"
+    #         dest: /etc/sysconfig/docker-storage-setup
+    #         owner: root
+    #         group: root
+    #         mode: 0644
         
       #===========================================================================
 
