@@ -46,7 +46,7 @@
     shell: rm -rf /var/lib/docker/*
     args:
       executable: /bin/bash
-    command_warnings: False
+      command_warnings: False
     
   - name: Remove everything 
     shell: container-storage-setup --reset
