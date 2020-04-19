@@ -10,12 +10,12 @@
         
     - block:
       - name: create the docker-storage-setup devicemapper config file
-          template:
-            src: "docker-storage-setup-dm"
-            dest: /etc/sysconfig/docker-storage-setup
-            owner: root
-            group: root
-            mode: 0644
+        template:
+          src: "docker-storage-setup-dm"
+          dest: /etc/sysconfig/docker-storage-setup
+          owner: root
+          group: root
+          mode: 0644
 
   tasks:
     - name: Drain PODS
