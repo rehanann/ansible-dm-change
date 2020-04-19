@@ -42,25 +42,22 @@
       state: stopped
     ignore_errors: yes
 
-  - name: Remove everything from /var/lib/docker
-    shell: rm -rf /var/lib/docker/*
-    args:
-      executable: /bin/bash
-      command_warnings: False
-    
-  - name: Remove everything 
-    shell: container-storage-setup --reset
-    args:
-      executable: /bin/bash
-    
-
   - name: Unmount a mounted volume
     mount:
       path: /var/lib/docker
       fstype: xfs
       state: absent
     
-
+  - name: Remove everything from /var/lib/docker
+    shell: rm -rf /var/lib/docker/*
+    args:
+      executable: /bin/bash
+    
+  - name: Remove everything 
+    shell: container-storage-setup --reset
+    args:
+      executable: /bin/bash
+      
   - name: Remove the logical volume.
     lvol:
       vg: vg_docker
