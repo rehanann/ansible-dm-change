@@ -112,11 +112,11 @@
       fstype: xfs
       state: present
       
-    - name: start docker
-      service: 
-        name: docker 
-        state: restarted 
-        enabled: true
+  - name: start docker
+    service: 
+      name: docker 
+      state: restarted 
+      enabled: true
       
     
   # - name: restart system
