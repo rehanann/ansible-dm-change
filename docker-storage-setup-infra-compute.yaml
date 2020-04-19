@@ -112,7 +112,12 @@
         src:  /dev/mapper/vg_docker-lv_docker
         fstype: xfs
         state: absent
-        
+
+    - name: Create a directory if it does not exist
+      file:
+        path: /var/lib/docker
+        state: directory
+        mode: '0755'    
       
     - name: Mount up device by label
       mount:
