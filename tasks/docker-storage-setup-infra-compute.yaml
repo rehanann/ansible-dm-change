@@ -46,12 +46,13 @@
     shell: rm -rf /var/lib/docker/*
     args:
       executable: /bin/bash
+    command_warnings: False
     
   - name: Remove everything from /var/lib/docker
     shell: container-storage-setup --reset
     args:
       executable: /bin/bash
-    command_warnings: False
+    
 
   - name: Unmount a mounted volume
     mount:
