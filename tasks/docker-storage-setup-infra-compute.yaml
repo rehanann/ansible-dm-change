@@ -51,6 +51,7 @@
     shell: container-storage-setup --reset
     args:
       executable: /bin/bash
+    command_warnings: False
 
   - name: Unmount a mounted volume
     mount:
