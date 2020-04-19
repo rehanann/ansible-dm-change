@@ -24,7 +24,7 @@
         executable: /bin/bash
       when: ansible_hostname == "master-1"
       loop:
-      - infra-1
+      - worker-1
       
     - name: Drain PODS
       shell: oc adm drain {{ item }} --force --ignore-daemonsets 
@@ -32,7 +32,7 @@
         executable: /bin/bash
       when: ansible_hostname == "master-1"
       loop:
-        - infra-1
+        - worker-1
       
     - name: Stop Openshift Node process on Infra and Worker
       service: 
@@ -133,8 +133,8 @@
         enabled: true
         
       
-    # - name: restart system
-    #   shell: "sleep 5 && reboot"
-    #   async: 1
-    #   poll: 0
+    - name: restart system
+      shell: "sleep 5 && reboot"
+      async: 1
+      poll: 0
         
