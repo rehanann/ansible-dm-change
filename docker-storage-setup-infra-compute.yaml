@@ -23,16 +23,16 @@
       args:
         executable: /bin/bash
       when: ansible_hostname == "master-1"
-      loop:
-      - worker-1
+      with_inventory_hostnames:
+        - nodes
       
     - name: Drain PODS
       shell: oc adm drain {{ item }} --force --ignore-daemonsets 
       args:
         executable: /bin/bash
       when: ansible_hostname == "master-1"
-      loop:
-        - worker-1
+      with_inventory_hostnames:
+        - nodes
       
     - name: Stop Openshift Node process on Infra and Worker
       service: 
@@ -105,6 +105,11 @@
 
     - name: Run docker-storage setup on /dev/sdb
       command: "docker-storage-setup"
+    
+    - name: Create a ext2 filesystem on /dev/sdb1
+      filesystem:
+        fstype: xfs
+        dev: /dev/mapper/docker--vg-docker--pool
       
     - name: remove Mount /etc/fstab
       mount:
