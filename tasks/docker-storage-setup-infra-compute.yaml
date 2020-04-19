@@ -48,7 +48,7 @@
       executable: /bin/bash
     command_warnings: False
     
-  - name: Remove everything from /var/lib/docker
+  - name: Remove everything 
     shell: container-storage-setup --reset
     args:
       executable: /bin/bash
