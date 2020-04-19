@@ -48,11 +48,11 @@
     args:
       executable: /bin/bash
     
-  - name: Unmount a mounted volume
-    mount:
-      path: /var/lib/docker
-      fstype: xfs
-      state: absent
+  # - name: Unmount a mounted volume
+  #   mount:
+  #     path: /var/lib/docker
+  #     fstype: xfs
+  #     state: absent
     
   - name: Remove everything from /var/lib/docker
     shell: rm -rf /var/lib/docker/*
